@@ -1,16 +1,36 @@
-import React from "react";
+import React, { useState, useEffect } from "react";
 import { FaBars } from "react-icons/fa";
 import { useNavigate, Link } from "react-router-dom";
 
 const Header = ({ onToggleSidebar }) => {
     const navigate = useNavigate();
-    const username = localStorage.getItem("username") || "User";
-
     const handleLogout = () => {
         localStorage.removeItem("auth");
         localStorage.removeItem("username");
         navigate("/login");
     };
+
+    const [username, setUsername] = useState("User");
+    useEffect(() => {
+    const updateUsername = () => {
+        const storedProfile = JSON.parse(localStorage.getItem("profileData"));
+        if (storedProfile && storedProfile.username) {
+            setUsername(storedProfile.username);
+        }
+    };
+
+    // Pertama kali load
+    updateUsername();
+
+    // Dengarkan perubahan dari halaman lain
+    window.addEventListener("profileUpdated", updateUsername);
+
+    // Cleanup event listener saat unmount
+    return () => {
+        window.removeEventListener("profileUpdated", updateUsername);
+    };
+}, []);
+
 
     return (
         <nav
@@ -19,22 +39,20 @@ const Header = ({ onToggleSidebar }) => {
         >
             <div className="d-flex align-items-center">
                 <button
-                     className="btn-toggle me-2"
+                    className="btn-toggle me-2"
                     onClick={onToggleSidebar}
                 >
                     <FaBars />
                 </button>
 
-                {/* 👇 Link ke Dashboard dengan nama user */}
                 <Link to="/" className="text-white text-decoration-none fw-bold">
                     {username}
                 </Link>
             </div>
 
-            {/* 👇 Dropdown di kanan */}
             <div className="dropdown ms-auto me-3">
                 <button
-                     className="btn-toggle me-2"
+                    className="btn-toggle me-2"
                     type="button"
                     id="dropdownMenuButton"
                     data-bs-toggle="dropdown"

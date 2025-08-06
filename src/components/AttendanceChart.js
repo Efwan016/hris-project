@@ -1,18 +1,40 @@
 import React from "react";
-import { Chart as ChartJS, BarElement, CategoryScale, LinearScale, Tooltip, Legend, } from "chart.js";
+import {
+    Chart as ChartJS,
+    BarElement,
+    CategoryScale,
+    LinearScale,
+    Tooltip,
+    Legend,
+} from "chart.js";
 import { Bar } from "react-chartjs-2";
 
 ChartJS.register(BarElement, CategoryScale, LinearScale, Tooltip, Legend);
 
 const AttendanceChart = () => {
+    const rawData = JSON.parse(localStorage.getItem("attendanceData")) || [];
+
+    const attendanceData = rawData.map((entry) => {
+        const date = entry.date.split("-").slice(1).join("/"); // e.g., "08/05"
+        let hours = 0;
+
+        if (entry.checkIn && entry.checkOut) {
+            const [inHour, inMin] = entry.checkIn.split(":").map(Number);
+            const [outHour, outMin] = entry.checkOut.split(":").map(Number);
+            hours = (outHour + outMin / 60) - (inHour + inMin / 60);
+        }
+
+        return { label: date, hours: +hours.toFixed(2) };
+    });
+
     const data = {
-        labels: ["Mon", "Tue", "wed", "Thu", "Fri"],
+        labels: attendanceData.map((e) => e.label),
         datasets: [
             {
-                label: "Daily Check",
-                data: [8, 6, 10, 7, 9],
-                backgroundColor: "#007bff",
-                borderRadius: 5,
+                label: "Work Hours",
+                data: attendanceData.map((e) => e.hours),
+                backgroundColor: "#0d6efd",
+                borderRadius: 6,
             },
         ],
     };
@@ -20,23 +42,25 @@ const AttendanceChart = () => {
     const options = {
         responsive: true,
         plugins: {
-            legend: {
-                position: "top",
+            legend: { display: false },
+            tooltip: {
+                callbacks: {
+                    label: (ctx) => `${ctx.raw} hours`,
+                },
             },
         },
         scales: {
             y: {
                 beginAtZero: true,
-                ticks: {
-                    precision: 0,
-                },
+                ticks: { stepSize: 1 },
+                title: { display: true, text: "Hours Worked" }
             },
         },
     };
 
     return (
-        <div style={{ width: "100%", maxWidth: "600px", marginTop:"2rem" }}>
-            <h5>Weekly Attendance</h5>
+        <div className="chart-section">
+            <h5 style={{ marginBottom: "1rem" }}>Weekly Attendance Overview</h5>
             <Bar data={data} options={options} />
         </div>
     );

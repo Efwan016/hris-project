@@ -8,23 +8,39 @@ import 'bootstrap/dist/css/bootstrap.min.css';
 const Dashboard = () => {
     const navigate = useNavigate();
     const [showSidebar, setShowSidebar] = useState(false);
+    const [username, setUsername] = useState("User");
+
+    const toggleSidebar = () => {
+        setShowSidebar((prev) => !prev);
+    };
 
     useEffect(() => {
         const isAuth = localStorage.getItem("auth");
         if (!isAuth) {
             navigate("/login");
         }
-    }, [navigate]);
 
-    const toggleSidebar = () => {
-        setShowSidebar(!showSidebar);
-    };
+        const storedProfile = JSON.parse(localStorage.getItem("profileData"));
+        if (storedProfile?.username) {
+            setUsername(storedProfile.username);
+        }
+
+        const handleProfileUpdate = () => {
+            const updatedProfile = JSON.parse(localStorage.getItem("profileData"));
+            if (updatedProfile?.username) {
+                setUsername(updatedProfile.username);
+            }
+        };
+
+        window.addEventListener("profileUpdated", handleProfileUpdate);
+        return () => {
+            window.removeEventListener("profileUpdated", handleProfileUpdate);
+        };
+    }, [navigate]);
 
     return (
         <div>
             <Header onToggleSidebar={toggleSidebar} />
-
-            {/* Overlay */}
             {showSidebar && (
                 <div
                     onClick={toggleSidebar}
@@ -40,12 +56,11 @@ const Dashboard = () => {
                 />
             )}
 
-            {/* Sidebar */}
             {showSidebar && (
                 <Sidebar
                     style={{
                         position: "fixed",
-                        top: 56, // tinggi navbar
+                        top: 56,
                         left: 0,
                         width: "250px",
                         height: "100%",
@@ -63,13 +78,13 @@ const Dashboard = () => {
                     marginLeft: showSidebar ? "250px" : "0",
                     padding: "20px",
                     transition: "margin-left 0.3s",
-                    marginTop: "56px", // karena navbar fixed
+                    marginTop: "56px",
                     height: "100vh",
-                    overflowY: "auto",  // ✅ supaya bisa scroll
+                    overflowY: "auto",  
                 }}
             >
                 <div className="container">
-                    <h2>Hi!, Welcome</h2>
+                    <h2>Hi!, Welcome 👤 {username}</h2>
                     <div className="row mt-4">
                         <div className="col-md-4">
                             <div className="card text-white bg-primary mb-3">

@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import { Modal, Button, Form } from 'react-bootstrap';
 
 const Profile = () => {
@@ -18,11 +18,20 @@ const Profile = () => {
     });
   };
 
+  useEffect(() => {
+  const savedProfile = JSON.parse(localStorage.getItem("profileData"));
+  if (savedProfile) {
+    setProfileData(savedProfile);
+  }
+}, []);
+
+
   const handleSave = () => {
-    // Simulasi simpan (nanti bisa connect ke API)
-    console.log("Data disimpan:", profileData);
-    handleClose();
-  };
+  localStorage.setItem("profileData", JSON.stringify(profileData));
+  window.dispatchEvent(new Event("profileUpdated"));
+  console.log("Data disimpan:", profileData);
+  handleClose();
+};
 
   return (
     <div className="container mt-5">

@@ -8,6 +8,7 @@ import Login from "./pages/Login";
 import Register from "./pages/Register";
 import Dashboard from "./pages/Dashboard";
 import Profile from "./pages/Profile";
+import Attendance from "./pages/Attendance";
 
 function App() {
   return (
@@ -17,7 +18,7 @@ function App() {
         <Route path="/register" element={<Register />} />
         <Route path="/" element={<PrivateRoute> <MainLayout> <Dashboard /> </MainLayout> </PrivateRoute>} />
         <Route path="/profile" element={<PrivateRoute> <MainLayout> <Profile /> </MainLayout> </PrivateRoute>} />
-
+        <Route path="/attendance"  element={<PrivateRoute> <MainLayout> <Attendance /> </MainLayout> </PrivateRoute>} />
       </Routes>
     </Router>
   );
