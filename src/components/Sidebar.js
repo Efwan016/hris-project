@@ -34,6 +34,8 @@ const Sidebar = ({ onLinkClick }) => {
             <NavLink to="/" style={linkStyle} onClick={onLinkClick}>Dashboard</NavLink>
             <NavLink to="/profile" style={linkStyle} onClick={onLinkClick}>Profile</NavLink>
             <NavLink to="/attendance" style={linkStyle} onClick={onLinkClick}>Attendance</NavLink>
+            <NavLink to="/employees" style={linkStyle} onClick={onLinkClick}>👥 Employees</NavLink>
+
             <button
                 onClick={() => {
                     handleLogout();
