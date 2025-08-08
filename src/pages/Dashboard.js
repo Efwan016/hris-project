@@ -4,6 +4,9 @@ import AttendanceChart from "../components/AttendanceChart";
 import Header from "../components/Header";
 import Sidebar from "../components/Sidebar";
 import 'bootstrap/dist/css/bootstrap.min.css';
+import '../css/layout.css';
+import LeaveChart from "../components/LeaveChart";
+
 
 const Dashboard = () => {
     const navigate = useNavigate();
@@ -37,6 +40,45 @@ const Dashboard = () => {
             window.removeEventListener("profileUpdated", handleProfileUpdate);
         };
     }, [navigate]);
+
+    const [employeeCount, setEmployeeCount] = useState(0);
+    const [leaveStats, setLeaveStats] = useState({
+        pending: 0,
+        approved: 0,
+        rejected: 0,
+        activeToday: 0,
+    });
+
+    useEffect(() => {
+        const empData = JSON.parse(localStorage.getItem("employees")) || [];
+        setEmployeeCount(empData.length);
+
+        const leaveData = JSON.parse(localStorage.getItem("leaveRequests")) || [];
+
+        const today = new Date();
+
+        const stats = {
+            pending: 0,
+            approved: 0,
+            rejected: 0,
+            activeToday: 0,
+        };
+
+        leaveData.forEach((req) => {
+            if (req.status === "Pending") stats.pending++;
+            if (req.status === "Approved") stats.approved++;
+            if (req.status === "Rejected") stats.rejected++;
+
+            const start = new Date(req.startDate);
+            const end = new Date(req.endDate);
+            if (req.status === "Approved" && start <= today && end >= today) {
+                stats.activeToday++;
+            }
+        });
+
+        setLeaveStats(stats);
+    }, []);
+
 
     return (
         <div>
@@ -80,7 +122,7 @@ const Dashboard = () => {
                     transition: "margin-left 0.3s",
                     marginTop: "56px",
                     height: "100vh",
-                    overflowY: "auto",  
+                    overflowY: "auto",
                 }}
             >
                 <div className="container">
@@ -90,32 +132,69 @@ const Dashboard = () => {
                             <div className="card text-white bg-primary mb-3">
                                 <div className="card-body">
                                     <h5 className="card-title">Total Employees</h5>
-                                    <p className="card-text">12</p>
+                                    <p className="card-text">{employeeCount}</p>
                                 </div>
                             </div>
                         </div>
+
                         <div className="col-md-4">
-                            <div className="card text-white bg-success mb-3">
+                            <div className="card text-white bg-info mb-3">
                                 <div className="card-body">
-                                    <h5 className="card-title">Today’s Attendance</h5>
-                                    <p className="card-text">8</p>
+                                    <h5 className="card-title">Active Leave Today</h5>
+                                    <p className="card-text">{leaveStats.activeToday}</p>
                                 </div>
                             </div>
                         </div>
+
                         <div className="col-md-4">
                             <div className="card text-white bg-warning mb-3">
                                 <div className="card-body">
                                     <h5 className="card-title">Pending Leaves</h5>
-                                    <p className="card-text">3</p>
+                                    <p className="card-text">{leaveStats.pending}</p>
+                                </div>
+                            </div>
+                        </div>
+
+                        <div className="col-md-4">
+                            <div className="card text-white bg-success mb-3">
+                                <div className="card-body">
+                                    <h5 className="card-title">Approved Leaves</h5>
+                                    <p className="card-text">{leaveStats.approved}</p>
+                                </div>
+                            </div>
+                        </div>
+
+                        <div className="col-md-4">
+                            <div className="card text-white bg-danger mb-3">
+                                <div className="card-body">
+                                    <h5 className="card-title">Rejected Leaves</h5>
+                                    <p className="card-text">{leaveStats.rejected}</p>
                                 </div>
                             </div>
                         </div>
                     </div>
 
-                    <div className="mt-4">
-                        <AttendanceChart />
+                </div>
+
+                <div className="row mt-4">
+                    <div className="col-md-6 mb-4">
+                        <div className="p-3 shadow-sm rounded bg-white h-100">
+                            <AttendanceChart />
+                        </div>
+                    </div>
+                    <div className="col-md-6 mb-4">
+                        <div className="p-3 shadow-sm rounded bg-white h-100">
+                            <LeaveChart
+                                pending={leaveStats.pending}
+                                approved={leaveStats.approved}
+                                rejected={leaveStats.rejected}
+                            />
+                        </div>
                     </div>
                 </div>
+
+
+
             </div>
         </div>
     );

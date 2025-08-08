@@ -1,0 +1,17 @@
+.leave-container {
+  max-width: 900px;
+}
+
+.leave-form {
+  background: #ffffff;
+  border: 1px solid #dee2e6;
+  border-radius: 12px;
+}
+
+.leave-form label {
+  font-weight: 500;
+}
+
+textarea.form-control {
+  resize: none;
+}

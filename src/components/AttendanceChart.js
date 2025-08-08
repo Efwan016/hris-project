@@ -35,6 +35,11 @@ const AttendanceChart = () => {
                 data: attendanceData.map((e) => e.hours),
                 backgroundColor: "#0d6efd",
                 borderRadius: 6,
+                options: {
+                    responsive: true,
+                    maintainAspectRatio: false,
+                }
+
             },
         ],
     };
@@ -59,9 +64,11 @@ const AttendanceChart = () => {
     };
 
     return (
-        <div className="chart-section">
-            <h5 style={{ marginBottom: "1rem" }}>Weekly Attendance Overview</h5>
-            <Bar data={data} options={options} />
+         <div className="card p-3" style={{ height: "300px" }}>
+            <h6 className="text-center mb-3">Weekly Attendance Overview</h6>
+            <div style={{ height: "100%" }}>
+                <Bar data={data} options={options} />
+            </div>
         </div>
     );
 };

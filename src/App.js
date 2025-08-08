@@ -11,6 +11,7 @@ import Profile from "./pages/Profile";
 import Attendance from "./pages/Attendance";
 import Employees from "./pages/Employees";
 import EmployeeDetail from "./pages/EmployeeDetail";
+import LeaveRequest from "./pages/LeaveRequest"
 
 function App() {
   return (
@@ -23,6 +24,7 @@ function App() {
         <Route path="/attendance" element={<PrivateRoute> <MainLayout> <Attendance /> </MainLayout> </PrivateRoute>} />
         <Route path="/employees" element={<PrivateRoute> <MainLayout> <Employees /> </MainLayout> </PrivateRoute>} />
         <Route path="/employees/:id" element={<PrivateRoute> <MainLayout> <EmployeeDetail /> </MainLayout> </PrivateRoute>} />
+        <Route path="/leave-request" element={<PrivateRoute> <MainLayout> <LeaveRequest /> </MainLayout> </PrivateRoute>} />
       </Routes>
     </Router>
   );

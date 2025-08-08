@@ -3,6 +3,7 @@ import { useNavigate } from "react-router-dom";
 
 const Employees = () => {
     const [employees, setEmployees] = useState([]);
+    const [searchTerm, setSearchTerm] = useState("");
     const navigate = useNavigate();
 
     // load dari localStorage saat komponen dimount
@@ -25,13 +26,28 @@ const Employees = () => {
         navigate("/employees/new");
     };
 
+    const filteredEmployees = employees.filter(
+        (emp) =>
+            emp.name.toLowerCase().includes(searchTerm.toLowerCase()) ||
+            emp.position.toLowerCase().includes(searchTerm.toLowerCase())
+    );
+
     return (
         <div className="emp-container mt-4">
             <h2>Employee List</h2>
+            <input
+                type="text"
+                className="form-control mb-3"
+                placeholder="🔍 Search by name or position..."
+                value={searchTerm}
+                onChange={(e) => setSearchTerm(e.target.value)}
+            />
+
             <button className="btn btn-primary mb-3" onClick={handleAdd}>
                 ➕ Add Employee
             </button>
-            {employees.length === 0 ? (
+
+            {filteredEmployees.length === 0 ? (
                 <p>No employees found.</p>
             ) : (
                 <table className="table table-bordered table-hover">
@@ -44,7 +60,7 @@ const Employees = () => {
                         </tr>
                     </thead>
                     <tbody>
-                        {employees.map((emp) => (
+                        {filteredEmployees.map((emp) => (
                             <tr key={emp.id}>
                                 <td>{emp.name}</td>
                                 <td>{emp.email}</td>
