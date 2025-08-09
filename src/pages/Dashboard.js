@@ -178,17 +178,21 @@ const Dashboard = () => {
 
                 <div className="row mt-4">
                     <div className="col-md-6 mb-4">
-                        <div className="p-3 shadow-sm rounded bg-white h-100">
+                        <div className="p-2 shadow-sm rounded bg-white h-100">
+                            <div className="attendance-container">
                             <AttendanceChart />
+                            </div>
                         </div>
                     </div>
                     <div className="col-md-6 mb-4">
-                        <div className="p-3 shadow-sm rounded bg-white h-100">
+                        <div className="p-2 shadow-sm rounded bg-white h-100">
+                            <div className="leave-chart">
                             <LeaveChart
                                 pending={leaveStats.pending}
                                 approved={leaveStats.approved}
                                 rejected={leaveStats.rejected}
                             />
+                            </div>
                         </div>
                     </div>
                 </div>

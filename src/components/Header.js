@@ -11,31 +11,11 @@ const Header = ({ onToggleSidebar }) => {
     };
 
     const [username, setUsername] = useState("User");
-    useEffect(() => {
-        const updateUsername = () => {
-            const storedProfile = JSON.parse(localStorage.getItem("profileData"));
-            if (storedProfile && storedProfile.username) {
-                setUsername(storedProfile.username);
-            }
-        };
-
-        // Pertama kali load
-        updateUsername();
-
-        // Dengarkan perubahan dari halaman lain
-        window.addEventListener("profileUpdated", updateUsername);
-
-        // Cleanup event listener saat unmount
-        return () => {
-            window.removeEventListener("profileUpdated", updateUsername);
-        };
-    }, []);
-
     const [pendingCount, setPendingCount] = useState(0);
     const [activeTodayCount, setActiveTodayCount] = useState(0);
+    const [unpaidPayrollCount, setUnpaidPayrollCount] = useState(0);
     const [showModal, setShowModal] = useState(false);
     const [notifications, setNotifications] = useState([]);
-
 
     useEffect(() => {
         const updateUsername = () => {
@@ -49,7 +29,6 @@ const Header = ({ onToggleSidebar }) => {
         window.addEventListener("profileUpdated", updateUsername);
 
         const requests = JSON.parse(localStorage.getItem("leaveRequests")) || [];
-
         const pending = requests.filter(req => req.status === "Pending").length;
         const active = requests.filter(req => {
             const start = new Date(req.startDate);
@@ -75,15 +54,21 @@ const Header = ({ onToggleSidebar }) => {
             }
         });
 
-        setNotifications(notifList);
+        // Payroll notifications
+        const payrolls = JSON.parse(localStorage.getItem("payrolls")) || [];
+        const unpaidPayrolls = payrolls.filter(p => p.status === "Unpaid");
+        setUnpaidPayrollCount(unpaidPayrolls.length);
 
+        unpaidPayrolls.forEach(p => {
+            notifList.push({ ...p, type: "Unpaid Payroll" });
+        });
+
+        setNotifications(notifList);
 
         return () => {
             window.removeEventListener("profileUpdated", updateUsername);
         };
     }, []);
-
-
 
     return (
         <nav
@@ -95,27 +80,40 @@ const Header = ({ onToggleSidebar }) => {
                     <div className="modal-dialog">
                         <div className="modal-content">
                             <div className="modal-header">
-                                <h5 className="modal-title">📌 Leave Notifications</h5>
+                                <h5 className="modal-title">📌 Notifications</h5>
                                 <button type="button" className="btn-close" onClick={() => setShowModal(false)}></button>
                             </div>
                             <div className="modal-body">
                                 {notifications.length === 0 ? (
-                                    <p>No active or pending leaves.</p>
+                                    <p>No active or pending notifications.</p>
                                 ) : (
                                     <ul className="list-group">
-                                        {notifications.map((notif) => (
+                                        {notifications.map((notif, index) => (
                                             <li
-                                                key={notif.id}
+                                                key={notif.id || index}
                                                 className="list-group-item list-group-item-action d-flex justify-content-between align-items-center"
                                                 style={{ cursor: "pointer" }}
                                                 onClick={() => {
                                                     setShowModal(false);
-                                                    navigate("/leave-request");
+                                                    if (notif.type === "Unpaid Payroll") {
+                                                        navigate("/payroll");
+                                                    } else {
+                                                        navigate("/leave-request");
+                                                    }
                                                 }}
                                             >
                                                 <div>
-                                                    <strong>{notif.type === "Pending" ? "🕒 Pending" : "🟢 Active"}:</strong>{" "}
-                                                    {notif.type} Leave from <strong>{notif.startDate}</strong> to <strong>{notif.endDate}</strong>
+                                                    <strong>
+                                                        {notif.type === "Pending"
+                                                            ? "🕒 Pending"
+                                                            : notif.type === "Active"
+                                                            ? "🟢 Active"
+                                                            : "💸 Unpaid"}
+                                                        :
+                                                    </strong>{" "}
+                                                    {notif.type === "Unpaid Payroll"
+                                                        ? `Payroll for ${notif.name} (${notif.month})`
+                                                        : `Leave from ${notif.startDate} to ${notif.endDate}`}
                                                 </div>
                                                 <span className="badge bg-secondary">{notif.type}</span>
                                             </li>
@@ -151,13 +149,13 @@ const Header = ({ onToggleSidebar }) => {
                     className="btn btn-sm btn-dark p-2"
                     type="button"
                     style={{ position: "relative" }}
-                    onClick={() => setShowModal(true)} // trigger modal langsung
+                    onClick={() => setShowModal(true)}
                 >
                     👤
-                    {(pendingCount > 0 || activeTodayCount > 0) && (
+                    {(pendingCount > 0 || activeTodayCount > 0 || unpaidPayrollCount > 0) && (
                         <span
                             className="badge bg-danger rounded-pill"
-                            title="Click to view leave notifications"
+                            title="Click to view notifications"
                             style={{
                                 position: "absolute",
                                 top: "2px",
@@ -167,13 +165,12 @@ const Header = ({ onToggleSidebar }) => {
                                 cursor: "pointer",
                             }}
                             onClick={(e) => {
-                                e.stopPropagation(); // cegah toggle dropdown
-                                setShowModal(true);  // buka modal
+                                e.stopPropagation();
+                                setShowModal(true);
                             }}
                         >
-                            {pendingCount + activeTodayCount}
+                            {pendingCount + activeTodayCount + unpaidPayrollCount}
                         </span>
-
                     )}
                 </button>
                 <button
@@ -196,7 +193,6 @@ const Header = ({ onToggleSidebar }) => {
                     </li>
                 </ul>
             </div>
-
         </nav>
     );
 };

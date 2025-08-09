@@ -10,6 +10,7 @@ const EmployeeDetail = () => {
     id: "",
     name: "",
     position: "",
+    salary: "",
     email: "",
   });
 
@@ -19,7 +20,7 @@ const EmployeeDetail = () => {
       const found = storedEmployees.find((emp) => emp.id === id);
       if (found) setEmployee(found);
     } else {
-      // Generate random ID for new employee
+      // Generate ID untuk karyawan baru
       const newId = Date.now().toString();
       setEmployee((prev) => ({ ...prev, id: newId }));
     }
@@ -82,6 +83,18 @@ const EmployeeDetail = () => {
           name="position"
           className="form-control"
           value={employee.position}
+          onChange={handleChange}
+        />
+      </div>
+
+      <div className="mb-3">
+        <label>Salary</label>
+        <input
+          type="number"
+          name="salary"
+          className="form-control"
+          placeholder="Salary"
+          value={employee.salary}
           onChange={handleChange}
         />
       </div>

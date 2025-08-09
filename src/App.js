@@ -12,6 +12,7 @@ import Attendance from "./pages/Attendance";
 import Employees from "./pages/Employees";
 import EmployeeDetail from "./pages/EmployeeDetail";
 import LeaveRequest from "./pages/LeaveRequest"
+import Payroll from "./pages/Payroll";
 
 function App() {
   return (
@@ -25,6 +26,7 @@ function App() {
         <Route path="/employees" element={<PrivateRoute> <MainLayout> <Employees /> </MainLayout> </PrivateRoute>} />
         <Route path="/employees/:id" element={<PrivateRoute> <MainLayout> <EmployeeDetail /> </MainLayout> </PrivateRoute>} />
         <Route path="/leave-request" element={<PrivateRoute> <MainLayout> <LeaveRequest /> </MainLayout> </PrivateRoute>} />
+        <Route path="/payroll" element={<PrivateRoute> <MainLayout> <Payroll /> </MainLayout> </PrivateRoute>} />
       </Routes>
     </Router>
   );
