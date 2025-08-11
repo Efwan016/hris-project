@@ -1,5 +1,6 @@
 import React, { useState, useEffect } from "react";
 import { useNavigate } from "react-router-dom";
+import DataTable from "../components/DataTable"; 
 
 const Employees = () => {
   const [employees, setEmployees] = useState([]);
@@ -26,19 +27,37 @@ const Employees = () => {
     navigate("/employees/new");
   };
 
-  const filteredEmployees = employees
-    .filter(
-      (emp) =>
-        emp.name.toLowerCase().includes(searchTerm.toLowerCase()) ||
-        emp.position.toLowerCase().includes(searchTerm.toLowerCase())
-    )
-    .sort((a, b) => {
-      const salaryA = Number(a.salary || 0);
-      const salaryB = Number(b.salary || 0);
-      return sortAsc ? salaryA - salaryB : salaryB - salaryA;
-    });
+  const filteredEmployees = employees.filter(emp =>
+    emp.name.toLowerCase().includes(searchTerm.toLowerCase()) ||
+    emp.position.toLowerCase().includes(searchTerm.toLowerCase())
+  );
 
-  const totalSalary = filteredEmployees.reduce((sum, emp) => sum + Number(emp.salary || 0), 0);
+  filteredEmployees.sort((a, b) => {
+    const salaryA = Number(a.salary || 0);
+    const salaryB = Number(b.salary || 0);
+    return sortAsc ? salaryA - salaryB : salaryB - salaryA;
+  });
+
+  const columns = [
+    { header: "Name", accessor: "name" },
+    { header: "Email", accessor: "email" },
+    { header: "Position", accessor: "position" },
+    { header: "Salary", accessor: "salary" },
+    {
+      header: "Action",
+      accessor: "action",
+      cell: (row) => (
+        <>
+          <button className="btn btn-info btn-sm me-2" onClick={() => handleEdit(row.id)}>
+            View/Edit
+          </button>
+          <button className="btn btn-danger btn-sm" onClick={() => handleDelete(row.id)}>
+            Delete
+          </button>
+        </>
+      ),
+    },
+  ];
 
   return (
     <div className="emp-container mt-4">
@@ -54,52 +73,17 @@ const Employees = () => {
       <button className="btn btn-primary mb-3" onClick={handleAdd}>
         ➕ Add Employee
       </button>
-
-      {filteredEmployees.length === 0 ? (
-        <p>No employees found.</p>
-      ) : (
-        <>
-          <table className="table table-bordered table-hover">
-            <thead className="table-light">
-              <tr>
-                <th>Name</th>
-                <th>Email</th>
-                <th>Position</th>
-                <th
-                  style={{ cursor: "pointer" }}
-                  onClick={() => setSortAsc(!sortAsc)}
-                  title="Click to sort"
-                >
-                  Salary {sortAsc ? "⬆️" : "⬇️"}
-                </th>
-                <th>Action</th>
-              </tr>
-            </thead>
-            <tbody>
-              {filteredEmployees.map((emp) => (
-                <tr key={emp.id}>
-                  <td>{emp.name}</td>
-                  <td>{emp.email}</td>
-                  <td>{emp.position}</td>
-                  <td>Rp {Number(emp.salary || 0).toLocaleString()}</td>
-                  <td>
-                    <button className="btn btn-info btn-sm me-2" onClick={() => handleEdit(emp.id)}>
-                      View/Edit
-                    </button>
-                    <button className="btn btn-danger btn-sm" onClick={() => handleDelete(emp.id)}>
-                      Delete
-                    </button>
-                  </td>
-                </tr>
-              ))}
-            </tbody>
-          </table>
-
-          <div className="mt-2 fw-bold">
-            💰 Total Salary: Rp {totalSalary.toLocaleString()}
-          </div>
-        </>
-      )}
+      <th
+        style={{ cursor: "pointer" }}
+        onClick={() => setSortAsc(!sortAsc)}
+        title="Click to sort"
+      >
+        Salary {sortAsc ? "⬆️" : "⬇️"}
+      </th>
+      <DataTable columns={columns} data={filteredEmployees} rowsPerPage={5} />
+      <div className="mt-2 fw-bold">
+        💰 Total Salary: Rp {filteredEmployees.reduce((sum, emp) => sum + Number(emp.salary || 0), 0).toLocaleString()}
+      </div>
     </div>
   );
 };

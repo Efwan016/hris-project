@@ -20,7 +20,6 @@ const EmployeeDetail = () => {
       const found = storedEmployees.find((emp) => emp.id === id);
       if (found) setEmployee(found);
     } else {
-      // Generate ID untuk karyawan baru
       const newId = Date.now().toString();
       setEmployee((prev) => ({ ...prev, id: newId }));
     }

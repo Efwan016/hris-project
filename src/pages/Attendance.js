@@ -1,37 +1,69 @@
 import React, { useState, useEffect } from "react";
 import AttendanceChart from "../components/AttendanceChart";
 
+
 const Attendance = () => {
     const [checkInTime, setCheckInTime] = useState(null);
     const [checkOutTime, setCheckOutTime] = useState(null);
 
     const today = new Date().toISOString().split("T")[0];
 
+
+    // Simulasi ambil userId dari auth (sesuaikan dengan auth system kamu)
+    const auth = JSON.parse(localStorage.getItem("auth")) || {};
+    const userId = auth.id || "guest";
+
     useEffect(() => {
-        const data = JSON.parse(localStorage.getItem("attendanceData")) || [];
-        const todayData = data.find(d => d.date === today);
-        if (todayData) {
-            setCheckInTime(todayData.checkIn || null);
-            setCheckOutTime(todayData.checkOut || null);
+        const attendanceData = JSON.parse(localStorage.getItem("attendanceData")) || [];
+        const userAttendance = attendanceData.find(a => a.userId === userId);
+        const todayRecord = userAttendance?.records?.find(r => r.date === today);
+        if (todayRecord) {
+            setCheckInTime(todayRecord.checkIn || null);
+            setCheckOutTime(todayRecord.checkOut || null);
         }
-    }, [today]);
+    }, [today, userId]);
 
     const handleCheckIn = () => {
-        const now = new Date().toTimeString().split(" ")[0]; // "HH:MM:SS"
-        const data = JSON.parse(localStorage.getItem("attendanceData")) || [];
-        const updatedData = [...data.filter(d => d.date !== today), { date: today, checkIn: now, checkOut: "" }];
-        localStorage.setItem("attendanceData", JSON.stringify(updatedData));
+        const now = new Date().toTimeString().split(" ")[0];
+        const attendanceData = JSON.parse(localStorage.getItem("attendanceData")) || [];
+        let userAttendance = attendanceData.find(a => a.userId === userId);
+
+        if (!userAttendance) {
+            userAttendance = { userId, records: [] };
+            attendanceData.push(userAttendance);
+        }
+
+        const todayRecord = userAttendance.records.find(r => r.date === today);
+        if (!todayRecord) {
+            userAttendance.records.push({ date: today, checkIn: now, checkOut: null });
+        } else {
+            alert("You have already checked in today!");
+            return;
+        }
+
+        localStorage.setItem("attendanceData", JSON.stringify(attendanceData));
         setCheckInTime(now);
     };
 
     const handleCheckOut = () => {
         const now = new Date().toTimeString().split(" ")[0];
-        const data = JSON.parse(localStorage.getItem("attendanceData")) || [];
-        const updatedData = data.map(d => {
-            if (d.date === today) return { ...d, checkOut: now };
-            return d;
-        });
-        localStorage.setItem("attendanceData", JSON.stringify(updatedData));
+        const attendanceData = JSON.parse(localStorage.getItem("attendanceData")) || [];
+        const userAttendance = attendanceData.find(a => a.userId === userId);
+
+        if (!userAttendance) {
+            alert("You haven't checked in yet!");
+            return;
+        }
+
+        const todayRecord = userAttendance.records.find(r => r.date === today);
+
+        if (!todayRecord || todayRecord.checkOut) {
+            alert("You haven't checked in yet or already checked out!");
+            return;
+        }
+
+        todayRecord.checkOut = now;
+        localStorage.setItem("attendanceData", JSON.stringify(attendanceData));
         setCheckOutTime(now);
     };
 
@@ -56,11 +88,12 @@ const Attendance = () => {
                 </div>
             </div>
 
-            <div className="page-content">
+            <div className="page-content mt-4">
                 <AttendanceChart />
             </div>
         </>
     );
+
 };
 
 export default Attendance;

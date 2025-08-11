@@ -20,11 +20,18 @@ const Login = () => {
     );
 
     if (foundUser) {
-      localStorage.setItem("auth", JSON.stringify({ isLoggedIn: true, user: email }));
+      const authData = {
+        isLoggedIn: true,
+        user: foundUser.user,
+        token: "dummy-token-123", // nanti bisa dari backend
+        loginTime: Date.now()
+      };
+      localStorage.setItem("auth", JSON.stringify(authData));
       navigate("/");
     } else {
       alert("Email atau password salah.");
     }
+
   };
 
   const loginBgStyle = {

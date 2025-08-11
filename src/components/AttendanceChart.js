@@ -14,18 +14,17 @@ ChartJS.register(BarElement, CategoryScale, LinearScale, Tooltip, Legend);
 const AttendanceChart = () => {
     const rawData = JSON.parse(localStorage.getItem("attendanceData")) || [];
 
-    const attendanceData = rawData.map((entry) => {
-        const date = entry.date.split("-").slice(1).join("/"); // e.g., "08/05"
-        let hours = 0;
+    const allRecords = rawData.flatMap(user => user.records || []);
 
-        if (entry.checkIn && entry.checkOut) {
-            const [inHour, inMin] = entry.checkIn.split(":").map(Number);
-            const [outHour, outMin] = entry.checkOut.split(":").map(Number);
-            hours = (outHour + outMin / 60) - (inHour + inMin / 60);
-        }
-
-        return { label: date, hours: +hours.toFixed(2) };
-    });
+    const attendanceData = allRecords
+        .filter(record => record.date && record.checkIn && record.checkOut)
+        .map(record => {
+            const date = record.date.split("-").slice(1).join("/");
+            const [inHour, inMin] = record.checkIn.split(":").map(Number);
+            const [outHour, outMin] = record.checkOut.split(":").map(Number);
+            const hours = (outHour + outMin / 60) - (inHour + inMin / 60);
+            return { label: date, hours: +hours.toFixed(2) };
+        });
 
     const data = {
         labels: attendanceData.map((e) => e.label),
@@ -35,11 +34,6 @@ const AttendanceChart = () => {
                 data: attendanceData.map((e) => e.hours),
                 backgroundColor: "#0d6efd",
                 borderRadius: 6,
-                options: {
-                    responsive: true,
-                    maintainAspectRatio: false,
-                }
-
             },
         ],
     };
@@ -64,7 +58,7 @@ const AttendanceChart = () => {
     };
 
     return (
-         <div className="card p-3" style={{ height: "300px" }}>
+        <div className="card p-3" style={{ height: "300px" }}>
             <h6 className="text-center mb-3">Weekly Attendance Overview</h6>
             <div style={{ height: "100%" }}>
                 <Bar data={data} options={options} />

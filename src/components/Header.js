@@ -7,8 +7,10 @@ const Header = ({ onToggleSidebar }) => {
     const handleLogout = () => {
         localStorage.removeItem("auth");
         localStorage.removeItem("username");
-        navigate("/login");
+        localStorage.removeItem("profileData");
+        navigate("/login", { replace: true });
     };
+
 
     const [username, setUsername] = useState("User");
     const [pendingCount, setPendingCount] = useState(0);
@@ -107,8 +109,8 @@ const Header = ({ onToggleSidebar }) => {
                                                         {notif.type === "Pending"
                                                             ? "🕒 Pending"
                                                             : notif.type === "Active"
-                                                            ? "🟢 Active"
-                                                            : "💸 Unpaid"}
+                                                                ? "🟢 Active"
+                                                                : "💸 Unpaid"}
                                                         :
                                                     </strong>{" "}
                                                     {notif.type === "Unpaid Payroll"
@@ -140,7 +142,7 @@ const Header = ({ onToggleSidebar }) => {
                 </button>
 
                 <Link to="/" className="text-white text-decoration-none fw-bold">
-                    {username}
+                    Dashboard
                 </Link>
             </div>
 

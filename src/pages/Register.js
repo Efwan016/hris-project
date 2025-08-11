@@ -32,9 +32,25 @@ const Register = () => {
         // Simpan ke localStorage
         localStorage.setItem("users", JSON.stringify(updatedUsers));
 
+        // 🔹 Tambahan: otomatis masuk ke employee list
+        const employees = JSON.parse(localStorage.getItem("employees")) || [];
+
+        const newEmployee = {
+            id: Date.now(), // ID unik
+            name: username,
+            email: "", // Email bisa diisi nanti di Profile
+            position: "", // Posisi default
+            salary: 0, // Gaji default
+            photo: `https://api.dicebear.com/6.x/adventurer/svg?seed=${username}`, // Avatar default
+        };
+
+        // Simpan ke employees
+        employees.push(newEmployee);
+        localStorage.setItem("employees", JSON.stringify(employees));
         alert("Registrasi berhasil. Silakan login.");
         navigate("/login");
     };
+
 
 
     const registerBgStyle = {

@@ -6,8 +6,11 @@ const Sidebar = ({ onLinkClick }) => {
 
     const handleLogout = () => {
         localStorage.removeItem("auth");
-        navigate("/login");
+        localStorage.removeItem("username");
+        localStorage.removeItem("profileData"); // kalau ada
+        navigate("/login", { replace: true });
     };
+
 
     const linkStyle = ({ isActive }) => ({
         display: "block",
@@ -35,7 +38,7 @@ const Sidebar = ({ onLinkClick }) => {
             <NavLink to="/attendance" style={linkStyle} onClick={onLinkClick}>Attendance</NavLink>
             <NavLink to="/employees" style={linkStyle} onClick={onLinkClick}>👥 Employees</NavLink>
             <NavLink to="/leave-request" style={linkStyle}>📋 Leave Request</NavLink>
-             <NavLink to="/payroll" style={linkStyle}>💰 Payroll</NavLink>
+            <NavLink to="/payroll" style={linkStyle}>💰 Payroll</NavLink>
 
             <button
                 onClick={() => {
