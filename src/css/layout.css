@@ -15,27 +15,65 @@ body, html {
 
 /* === AUTH PAGES === */
 .auth-container {
-  max-width: 400px;
-  margin: 100px auto;
-  background: rgba(255, 255, 255, 0.15);
-  backdrop-filter: blur(10px);
-  padding: 2rem;
-  border-radius: 1rem;
-  box-shadow: 0 8px 32px rgba(0, 0, 0, 0.25);
+  background-color: transparent;
+  backdrop-filter: blur(15px);
+  -webkit-backdrop-filter: blur(15px);
+  border-radius: 12px; 
+  box-shadow: 0 8px 24px rgba(0, 0, 0, 0.15);
+  padding: 2rem 2.5rem; 
+  max-width: 480px;
+  width: 100%;
+  overflow: hidden;
+  transition: box-shadow 0.3s ease;
+  color: #d0d0d0;
+}
+
+.auth-container:hover {
+  box-shadow: 0 12px 32px rgba(0, 0, 0, 0.25); /* efek hover */
 }
 
 .auth-container h2 {
+  font-weight: 700;
+  margin-bottom: 1.5rem;
+  color: #d0d0d0;
   text-align: center;
-  margin-bottom: 1rem;
-  color: #fff;
 }
 
-.auth-form input {
-  margin-bottom: 1rem;
+.auth-container label {
+  font-weight: 600;
+  color: #555;
+  margin-bottom: 0.3rem;
 }
 
-.auth-form button {
-  width: 100%;
+.auth-container input,
+.auth-container select {
+  border: 1.5px solid #ccc;
+  border-radius: 8px;
+  padding: 0.5rem 0.75rem;
+  font-size: 1rem;
+  transition: border-color 0.3s ease;
+}
+
+.auth-container input:focus,
+.auth-container select:focus {
+  border-color: #3b82f6; /* biru fokus */
+  outline: none;
+  box-shadow: 0 0 8px rgba(59, 130, 246, 0.4);
+}
+
+.auth-container button {
+  font-weight: 600;
+  padding: 0.6rem 1rem;
+  border-radius: 8px;
+}
+
+.auth-container button.btn-primary {
+  background-color: #3b82f6;
+  border: none;
+}
+
+.auth-container button.btn-primary:hover {
+  background-color: #2563eb;
 }
 
 /* === HEADER === */
@@ -460,3 +498,10 @@ button:hover {
   padding: 0.5rem 1rem;
   font-size: 1rem;
 }
+
+footer {
+  position: auto;
+  bottom: 0;
+  width: 100%;
+}
+
