@@ -37,8 +37,8 @@ const Sidebar = ({ onLinkClick }) => {
             <NavLink to="/" style={linkStyle} onClick={onLinkClick}>Dashboard</NavLink>
             <NavLink to="/attendance" style={linkStyle} onClick={onLinkClick}>Attendance</NavLink>
             <NavLink to="/employees" style={linkStyle} onClick={onLinkClick}>👥 Employees</NavLink>
-            <NavLink to="/leave-request" style={linkStyle}>📋 Leave Request</NavLink>
-            <NavLink to="/payroll" style={linkStyle}>💰 Payroll</NavLink>
+            <NavLink to="/leave-request" style={linkStyle} onClick={onLinkClick}>📋 Leave Request</NavLink>
+            <NavLink to="/payroll" style={linkStyle} onClick={onLinkClick}>💰 Payroll</NavLink>
 
             <button
                 onClick={() => {

@@ -1,39 +1,18 @@
 import React from "react";
-import {
-    Chart as ChartJS,
-    BarElement,
-    CategoryScale,
-    LinearScale,
-    Tooltip,
-    Legend,
-} from "chart.js";
+import { Chart as ChartJS, BarElement, CategoryScale, LinearScale, Tooltip, Legend, } from "chart.js";
 import { Bar } from "react-chartjs-2";
 
 ChartJS.register(BarElement, CategoryScale, LinearScale, Tooltip, Legend);
 
 const AttendanceChart = () => {
-    const rawData = JSON.parse(localStorage.getItem("attendanceData")) || [];
-
-    const allRecords = rawData.flatMap(user => user.records || []);
-
-    const attendanceData = allRecords
-        .filter(record => record.date && record.checkIn && record.checkOut)
-        .map(record => {
-            const date = record.date.split("-").slice(1).join("/");
-            const [inHour, inMin] = record.checkIn.split(":").map(Number);
-            const [outHour, outMin] = record.checkOut.split(":").map(Number);
-            const hours = (outHour + outMin / 60) - (inHour + inMin / 60);
-            return { label: date, hours: +hours.toFixed(2) };
-        });
-
     const data = {
-        labels: attendanceData.map((e) => e.label),
+        labels: ["Mon", "Tue", "wed", "Thu", "Fri"],
         datasets: [
             {
-                label: "Work Hours",
-                data: attendanceData.map((e) => e.hours),
-                backgroundColor: "#0d6efd",
-                borderRadius: 6,
+                label: "Daily Check",
+                data: [8, 6, 10, 7, 9],
+                backgroundColor: "#007bff",
+                borderRadius: 5,
             },
         ],
     };
@@ -41,28 +20,24 @@ const AttendanceChart = () => {
     const options = {
         responsive: true,
         plugins: {
-            legend: { display: false },
-            tooltip: {
-                callbacks: {
-                    label: (ctx) => `${ctx.raw} hours`,
-                },
+            legend: {
+                position: "top",
             },
         },
         scales: {
             y: {
                 beginAtZero: true,
-                ticks: { stepSize: 1 },
-                title: { display: true, text: "Hours Worked" }
+                ticks: {
+                    precision: 0,
+                },
             },
         },
     };
 
     return (
-        <div className="card p-3" style={{ height: "300px" }}>
-            <h6 className="text-center mb-3">Weekly Attendance Overview</h6>
-            <div style={{ height: "100%" }}>
-                <Bar data={data} options={options} />
-            </div>
+        <div style={{ width: "100%", maxWidth: "600px", marginTop:"2rem" }}>
+            <h5>Weekly Attendance</h5>
+            <Bar data={data} options={options} />
         </div>
     );
 };

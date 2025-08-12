@@ -1,19 +1,13 @@
-import React, { useState, useEffect } from "react";
+import React, { useState } from "react";
 import { useNavigate } from "react-router-dom";
 import Footer from "../components/Footer";
+import "../css/layout.css";
 
 const ForgotPassword = () => {
     const [username, setUsername] = useState("");
     const [newPassword, setNewPassword] = useState("");
     const [step, setStep] = useState(1);
     const navigate = useNavigate();
-
-    useEffect(() => {
-        document.body.style.overflow = "hidden";
-        return () => {
-            document.body.style.overflow = "auto";
-        };
-    }, []);
 
     const handleCheckUser = (e) => {
         e.preventDefault();
@@ -39,7 +33,7 @@ const ForgotPassword = () => {
         navigate("/login");
     };
 
-    const loginBgStyle = {
+    const bgStyle = {
         backgroundImage: "url('/img/bg-cyberpunk.jpeg')",
         backgroundSize: "cover",
         backgroundPosition: "center",
@@ -49,10 +43,10 @@ const ForgotPassword = () => {
 
     return (
         <div
-            style={loginBgStyle}
+            style={bgStyle}
             className="bg-content d-flex flex-column min-vh-100"
         >
-            {/* Konten */}
+            {/* Konten tengah */}
             <div className="flex-grow-1 d-flex align-items-center justify-content-center">
                 <div className="auth-container">
                     <h2>Lupa Password</h2>
@@ -89,6 +83,7 @@ const ForgotPassword = () => {
                         </form>
                     )}
 
+                    {/* Tombol kembali selalu ada */}
                     <button
                         type="button"
                         className="btn btn-secondary w-100"
@@ -97,8 +92,10 @@ const ForgotPassword = () => {
                         Kembali ke Login
                     </button>
                 </div>
+
             </div>
 
+            {/* Footer selalu di bawah */}
             <Footer />
         </div>
     );

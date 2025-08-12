@@ -13,6 +13,7 @@ import Employees from "./pages/Employees";
 import EmployeeDetail from "./pages/EmployeeDetail";
 import LeaveRequest from "./pages/LeaveRequest"
 import Payroll from "./pages/Payroll";
+import ForgotPassword from "./pages/ForgotPassword";
 
 function App() {
   return (
@@ -20,6 +21,7 @@ function App() {
       <Routes>
         <Route path="/login" element={<Login />} />
         <Route path="/register" element={<Register />} />
+        <Route path="/forgot-password" element={<ForgotPassword />} />
         <Route path="/" element={<PrivateRoute> <MainLayout> <Dashboard /> </MainLayout> </PrivateRoute>} />
         <Route path="/profile" element={<PrivateRoute> <MainLayout> <Profile /> </MainLayout> </PrivateRoute>} />
         <Route path="/attendance" element={<PrivateRoute> <MainLayout> <Attendance /> </MainLayout> </PrivateRoute>} />
