@@ -5,14 +5,14 @@ const Footer = () => {
     <footer
       style={{
         backgroundColor: "transparent",
-        color: "#d1d5db",
+        color: "#000",
         textAlign: "center",
         padding: "1rem",
         marginTop: "auto",
       }}
     >
       <p>
-        &copy; {new Date().getFullYear()} Employee Management System.  
+        &copy; {new Date().getFullYear()} HRIS-App web.  
         <span style={{ color: "#60a5fa" }}> All Rights Reserved.</span>
       </p>
     </footer>

@@ -82,8 +82,6 @@ const ForgotPassword = () => {
                             </button>
                         </form>
                     )}
-
-                    {/* Tombol kembali selalu ada */}
                     <button
                         type="button"
                         className="btn btn-secondary w-100"
@@ -94,8 +92,6 @@ const ForgotPassword = () => {
                 </div>
 
             </div>
-
-            {/* Footer selalu di bawah */}
             <Footer />
         </div>
     );

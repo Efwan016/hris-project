@@ -10,13 +10,19 @@ const Login = () => {
   const [showPassword, setShowPassword] = useState(false);
 
   useEffect(() => {
-    // Disable scroll saat login page aktif
-    document.body.style.overflow = "hidden";
-    return () => {
-      // Balikin scroll saat pindah halaman
-      document.body.style.overflow = "auto";
-    };
-  }, []);
+  const scrollY = window.scrollY;
+  document.body.style.position = 'fixed';
+  document.body.style.top = `-${scrollY}px`;
+  document.body.style.left = '0';
+  document.body.style.right = '0';
+
+  return () => {
+    document.body.style.position = '';
+    document.body.style.top = '';
+    window.scrollTo(0, scrollY);
+  };
+}, []);
+
 
   const handleLogin = (e) => {
     e.preventDefault();
@@ -123,8 +129,6 @@ const Login = () => {
           </button>
         </div>
       </div>
-
-      {/* Footer */}
       <Footer />
     </div>
   );

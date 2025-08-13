@@ -14,10 +14,9 @@ const Register = () => {
     const [showPassword, setShowPassword] = useState(false);
 
     useEffect(() => {
-        // Disable scroll di body biar background fixed
-        document.body.style.overflow = "hidden";
+        document.body.style.overflow = "hidden"; // disable scroll
         return () => {
-            document.body.style.overflow = "auto";
+            document.body.style.overflow = "auto"; // enable scroll on unmount
         };
     }, []);
 
@@ -65,37 +64,25 @@ const Register = () => {
         backgroundSize: "cover",
         backgroundPosition: "center",
         backgroundRepeat: "no-repeat",
-        minHeight: "100vh",
-        display: "flex",
-        flexDirection: "column",
     };
 
     return (
-        <div style={registerBgStyle} className="d-flex flex-column min-vh-100">
-            {/* Konten utama */}
+        <div
+            style={{ ...registerBgStyle, height: "100vh" }}
+            className="d-flex flex-column bg-content"
+        >
             <main
-                className="d-flex justify-content-center align-items-center flex-grow-1 p-3"
-                style={{ minHeight: 0, overflowY: "auto" }}
+                className="flex-grow-1 d-flex justify-content-center align-items-center p-3"
+                style={{ overflowY: "auto" }}
             >
                 <div
-                    className="auth-container"
-                    style={{
-                        height: "100vh",
-                        width: "100vw",
-                        display: "flex",
-                        flexDirection: "column",
-                        justifyContent: "center",
-                        alignItems: "center",
-                        overflow: "hidden", 
-                        padding: "20px",
-                        boxSizing: "border-box",
-                    }}
-                >
-                    <h2 className="mb-3 text-center">Register</h2>
-                    <form className="auth-form" onSubmit={handleRegister}>
-                        <div style={{ display: "flex", gap: "1rem", marginBottom: "0.5rem" }}>
-                            <div style={{ flex: 1 }}>
-                                <p className="text-gray-400 mb-1">Username</p>
+                    className="auth-container rounded shadow p-4"
+                    style={{ maxWidth: 480, width: "100%" }}           >
+                    <h2 className="mb-4 text-center">Register</h2>
+                    <form onSubmit={handleRegister}>
+                        <div className="d-flex gap-3 mb-3">
+                            <div className="flex-grow-1">
+                                <label className="form-label text-secondary">Username</label>
                                 <input
                                     type="text"
                                     value={username}
@@ -104,8 +91,8 @@ const Register = () => {
                                     required
                                 />
                             </div>
-                            <div style={{ flex: 1, position: "relative" }}>
-                                <p className="text-gray-400 mb-1">Password</p>
+                            <div className="flex-grow-1 position-relative">
+                                <label className="form-label text-secondary">Password</label>
                                 <input
                                     type={showPassword ? "text" : "password"}
                                     value={password}
@@ -117,19 +104,21 @@ const Register = () => {
                                     onClick={() => setShowPassword(!showPassword)}
                                     style={{
                                         position: "absolute",
-                                        right: "10px",
+                                        right: 12,
                                         top: "50%",
                                         transform: "translateY(-50%)",
                                         cursor: "pointer",
                                         color: "#888",
+                                        userSelect: "none",
                                     }}
+                                    aria-label="Toggle password visibility"
                                 >
                                     {showPassword ? <FaEyeSlash /> : <FaEye />}
                                 </span>
                             </div>
                         </div>
 
-                        <p className="text-gray-400 mb-1">Role</p>
+                        <label className="form-label text-secondary mb-1">Role</label>
                         <select
                             className="form-control mb-3"
                             value={role}
@@ -140,9 +129,9 @@ const Register = () => {
                             <option value="admin">Admin</option>
                         </select>
 
-                        <div style={{ display: "flex", gap: "1rem" }}>
-                            <div style={{ flex: 1 }}>
-                                <p className="text-gray-400 mb-1">Position</p>
+                        <div className="d-flex gap-3 mb-3">
+                            <div className="flex-grow-1">
+                                <label className="form-label text-secondary">Position</label>
                                 <input
                                     type="text"
                                     value={position}
@@ -150,27 +139,30 @@ const Register = () => {
                                     className="form-control"
                                 />
                             </div>
-                            <div style={{ flex: 1 }}>
-                                <p className="text-gray-400 mb-1">Salary</p>
+                            <div className="flex-grow-1">
+                                <label className="form-label text-secondary">Salary</label>
                                 <input
                                     type="number"
                                     value={salary}
                                     onChange={(e) => setSalary(e.target.value)}
                                     className="form-control"
+                                    min={0}
                                 />
                             </div>
                         </div>
 
-                        <button type="submit" className="btn btn-primary w-100 my-3">
+                        <button type="submit" className="btn btn-primary w-100 mb-3">
                             Register
                         </button>
+
                         <button
                             type="button"
-                            className="btn btn-link w-100"
+                            className="btn btn-link w-100 mb-2"
                             onClick={() => navigate("/forgot-password")}
                         >
                             Lupa Password?
                         </button>
+
                         <button
                             type="button"
                             className="btn btn-secondary w-100"
@@ -182,8 +174,7 @@ const Register = () => {
                 </div>
             </main>
 
-            {/* Footer dengan flex-shrink 0 agar tidak mengecil */}
-            <Footer style={{ flexShrink: 0 }} />
+            <Footer />
         </div>
     );
 };

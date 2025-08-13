@@ -1,12 +1,13 @@
 import React, { useState, useEffect } from "react";
 import { useNavigate } from "react-router-dom";
-import DataTable from "../components/DataTable"; 
+import DataTable from "../components/DataTable";
 
 const Employees = () => {
   const [employees, setEmployees] = useState([]);
   const [searchTerm, setSearchTerm] = useState("");
   const [sortAsc, setSortAsc] = useState(true);
   const navigate = useNavigate();
+  const userRole = localStorage.getItem("role") || "user";
 
   useEffect(() => {
     const storedEmployees = JSON.parse(localStorage.getItem("employees")) || [];
@@ -14,16 +15,19 @@ const Employees = () => {
   }, []);
 
   const handleDelete = (id) => {
+    if (userRole !== "admin") return;
     const filtered = employees.filter(emp => emp.id !== id);
     setEmployees(filtered);
     localStorage.setItem("employees", JSON.stringify(filtered));
   };
 
   const handleEdit = (id) => {
+    if (userRole !== "admin") return;
     navigate(`/employees/${id}`);
   };
 
   const handleAdd = () => {
+    if (userRole !== "admin") return;
     navigate("/employees/new");
   };
 
@@ -46,16 +50,30 @@ const Employees = () => {
     {
       header: "Action",
       accessor: "action",
-      cell: (row) => (
-        <>
-          <button className="btn btn-info btn-sm me-2" onClick={() => handleEdit(row.id)}>
-            View/Edit
+      cell: (row) =>
+        userRole === "admin" ? (
+          <>
+            <button
+              className="btn btn-info btn-sm me-2"
+              onClick={() => handleEdit(row.id)}
+            >
+              View/Edit
+            </button>
+            <button
+              className="btn btn-danger btn-sm"
+              onClick={() => handleDelete(row.id)}
+            >
+              Delete
+            </button>
+          </>
+        ) : (
+          <button
+            className="btn btn-secondary btn-sm"
+            onClick={() => navigate(`/employees/${row.id}`)}
+          >
+            View
           </button>
-          <button className="btn btn-danger btn-sm" onClick={() => handleDelete(row.id)}>
-            Delete
-          </button>
-        </>
-      ),
+        ),
     },
   ];
 
@@ -70,9 +88,12 @@ const Employees = () => {
         onChange={(e) => setSearchTerm(e.target.value)}
       />
 
-      <button className="btn btn-primary mb-3" onClick={handleAdd}>
-        ➕ Add Employee
-      </button>
+      {userRole === "admin" && (
+        <button className="btn btn-primary mb-3" onClick={handleAdd}>
+          ➕ Add Employee
+        </button>
+      )}
+
       <th
         style={{ cursor: "pointer" }}
         onClick={() => setSortAsc(!sortAsc)}
@@ -82,7 +103,10 @@ const Employees = () => {
       </th>
       <DataTable columns={columns} data={filteredEmployees} rowsPerPage={5} />
       <div className="mt-2 fw-bold">
-        💰 Total Salary: Rp {filteredEmployees.reduce((sum, emp) => sum + Number(emp.salary || 0), 0).toLocaleString()}
+        💰 Total Salary: Rp{" "}
+        {filteredEmployees
+          .reduce((sum, emp) => sum + Number(emp.salary || 0), 0)
+          .toLocaleString()}
       </div>
     </div>
   );

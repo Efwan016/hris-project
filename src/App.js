@@ -14,6 +14,7 @@ import EmployeeDetail from "./pages/EmployeeDetail";
 import LeaveRequest from "./pages/LeaveRequest"
 import Payroll from "./pages/Payroll";
 import ForgotPassword from "./pages/ForgotPassword";
+import Footer from "./components/Footer";
 
 function App() {
   return (
@@ -30,6 +31,7 @@ function App() {
         <Route path="/leave-request" element={<PrivateRoute> <MainLayout> <LeaveRequest /> </MainLayout> </PrivateRoute>} />
         <Route path="/payroll" element={<PrivateRoute> <MainLayout> <Payroll /> </MainLayout> </PrivateRoute>} />
       </Routes>
+      <Footer />
     </Router>
   );
 }

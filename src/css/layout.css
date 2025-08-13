@@ -143,8 +143,10 @@ body, html {
 
 .navbar button {
   padding: 0.5rem 1rem;
-  background-color: #dc3545;
+  background-color: transparent;
   border: none;
+  font-size: 1.2rem;
+  font-weight: 400;
   border-radius: 4px;
   color: #fff;
   cursor: pointer;
@@ -153,6 +155,29 @@ body, html {
 
 .navbar button:hover {
   background-color: #c82333;
+}
+.dropdown-menu.custom-dropdown {
+  background-color: #1f2937; 
+  border-radius: 0.5rem;
+  padding: 0.5rem 0;
+  border: none;
+  box-shadow: 0 4px 12px rgba(0,0,0,0.15);
+  min-width: 180px;
+}
+
+.dropdown-menu.custom-dropdown .dropdown-item {
+  color: #0056b3;
+  padding: 0.5rem 1rem;
+  transition: background-color 0.2s ease, padding-left 0.2s ease;
+}
+
+.dropdown-menu.custom-dropdown .dropdown-item:hover button.dropdown-item:hover {
+  background-color: rgba(255, 255, 255, 0.1);
+  padding-left: 1.2rem; 
+}
+
+.dropdown-menu.custom-dropdown .dropdown-item:active button.dropdown-item:hover {
+  background-color: rgba(255, 255, 255, 0.2);
 }
 
 /* Cards */

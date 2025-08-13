@@ -10,14 +10,14 @@ const Payroll = () => {
     const [payrolls, setPayrolls] = useState([]);
     const [filterMonth, setFilterMonth] = useState("");
     const [searchName, setSearchName] = useState("");
-
     const currentMonth = new Date().toISOString().slice(0, 7);
+    const auth = JSON.parse(localStorage.getItem("auth"));
+    const role = auth?.role || "user";
 
     useEffect(() => {
         const storedEmployees = JSON.parse(localStorage.getItem("employees")) || [];
         let storedPayrolls = JSON.parse(localStorage.getItem("payrolls")) || [];
 
-        // Auto-generate payrolls for current month if not exists
         const existingIds = storedPayrolls.map(p => `${p.name}-${p.month}`);
         const newPayrolls = storedEmployees.map(emp => {
             const key = `${emp.name}-${currentMonth}`;
@@ -130,16 +130,26 @@ const Payroll = () => {
                         value={searchName}
                         onChange={(e) => setSearchName(e.target.value)}
                     />
-                    <select className="form-select" value={filterMonth} onChange={(e) => setFilterMonth(e.target.value)}>
+                    <select
+                        className="form-select"
+                        value={filterMonth}
+                        onChange={(e) => setFilterMonth(e.target.value)}
+                    >
                         <option value="">All Months</option>
                         {[...new Set(payrolls.map((p) => p.month))].map((month) => (
-                            <option key={month} value={month}>{month}</option>
+                            <option key={month} value={month}>
+                                {month}
+                            </option>
                         ))}
                     </select>
                 </div>
-                <div className="d-flex gap-2">
-                    <button className="btn btn-success" onClick={exportToPDF}>📄 Export PDF</button>
-                </div>
+                {role === "admin" && (
+                    <div className="d-flex gap-2">
+                        <button className="btn btn-success" onClick={exportToPDF}>
+                            📄 Export PDF
+                        </button>
+                    </div>
+                )}
             </div>
 
             <div className="table-responsive">
@@ -160,22 +170,49 @@ const Payroll = () => {
                                 <td>{p.month}</td>
                                 <td>Rp {Number(p.salary).toLocaleString()}</td>
                                 <td>
-                                    <span className={`badge bg-${p.status === "Paid" ? "success" : "warning"}`}>{p.status}</span>
+                                    <span
+                                        className={`badge bg-${
+                                            p.status === "Paid" ? "success" : "warning"
+                                        }`}
+                                    >
+                                        {p.status}
+                                    </span>
                                 </td>
                                 <td>
                                     <div className="d-flex gap-2">
-                                        {p.status === "Unpaid" && (
-                                            <button className="btn btn-sm btn-success" onClick={() => handleEditStatus(p.id, "Paid")}>✔️ Mark as Paid</button>
+                                        {role === "admin" && p.status === "Unpaid" && (
+                                            <button
+                                                className="btn btn-sm btn-success"
+                                                onClick={() => handleEditStatus(p.id, "Paid")}
+                                            >
+                                                ✔️ Mark as Paid
+                                            </button>
                                         )}
-                                        <button className="btn btn-sm btn-danger" onClick={() => handleDelete(p.id)}>🗑️ Delete</button>
-                                        <button className="btn btn-sm btn-info" onClick={() => exportSlipPDF(p)}>📥 Slip</button>
+                                        {role === "admin" && (
+                                            <button
+                                                className="btn btn-sm btn-danger"
+                                                onClick={() => handleDelete(p.id)}
+                                            >
+                                                🗑️ Delete
+                                            </button>
+                                        )}
+                                        {(role === "admin" || auth?.name === p.name) && (
+                                            <button
+                                                className="btn btn-sm btn-info"
+                                                onClick={() => exportSlipPDF(p)}
+                                            >
+                                                📥 Slip
+                                            </button>
+                                        )}
                                     </div>
                                 </td>
                             </tr>
                         ))}
                         {filtered.length === 0 && (
                             <tr>
-                                <td colSpan="5" className="text-center text-muted">No payroll data found.</td>
+                                <td colSpan="5" className="text-center text-muted">
+                                    No payroll data found.
+                                </td>
                             </tr>
                         )}
                     </tbody>
@@ -184,5 +221,6 @@ const Payroll = () => {
         </div>
     );
 };
+
 
 export default Payroll;

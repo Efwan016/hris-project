@@ -7,7 +7,7 @@ const Sidebar = ({ onLinkClick }) => {
     const handleLogout = () => {
         localStorage.removeItem("auth");
         localStorage.removeItem("username");
-        localStorage.removeItem("profileData"); // kalau ada
+        localStorage.removeItem("profileData");
         navigate("/login", { replace: true });
     };
 
