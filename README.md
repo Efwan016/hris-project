@@ -1,20 +1,59 @@
 # 💼 Web HRIS - Human Resources Information System
 
-A modern Human Resources Information System (HRIS) built with **React.js**, designed to manage employee attendance, profiles, and essential HR functions in a user-friendly interface.
+A modern Human Resources Information System (HRIS) built with **React.js**, designed to manage employee attendance, profiles, leave requests, payroll, and essential HR functions in a user-friendly interface.
+
+---
 
 ## 🚀 Features
 
-- 🔐 **Authentication**: Login & Register with `localStorage`
-- 🏠 **Dashboard**: Quick overview of employees, attendance, and leave requests
-- 🧑‍💼 **Employee Profile**: View and edit user profile with modal form
-- 🕒 **Attendance Tracking**:
-  - Check-In / Check-Out
-  - Local data storage for daily logs
-  - Weekly attendance chart with working hours
-- 📊 **Attendance Chart**: Visualize weekly working hours using `Chart.js`
-- 🧭 **Sidebar Navigation**: Easy-to-use sidebar with page links
-- 🌐 **Responsive UI**: Clean and responsive interface styled with CSS & Bootstrap
-- 🔒 **Protected Routes** using `PrivateRoute`
+- 🔐 **Authentication & Routing**
+  - Login & Register pages
+  - **Private Routes** to protect pages
+  - Role-based access: Admin & User
+
+- 🏠 **Dashboard**
+  - Quick overview of employees, attendance, leave requests, and payroll
+  - Responsive charts using **Chart.js**
+  - Card hover effects with `useEffect`
+
+- 🧑‍💼 **Employee Profile**
+  - View and edit user info
+  - Modal form for editing details
+
+- 📝 **Leave Request**
+  - Submit leave requests
+  - View leave history
+  - Manage statuses: Pending, Approved, Rejected
+  - Only admins can approve/reject
+
+- 🧑‍💻 **Employee Management**
+  - Automatic sync of new users to employee list
+  - View, edit, and delete employee data
+  - Reusable data table component
+
+- 🕒 **Attendance Tracking**
+  - Daily Check-In / Check-Out
+  - Weekly attendance chart using Chart.js
+  - Data stored in localStorage
+
+- 💰 **Payroll**
+  - View and manage employee salary records
+  - Status management: Paid / Unpaid
+  - Export payslips to PDF/CSV
+  - Admin-only approval for salary status
+
+- 🧭 **Sidebar Navigation**
+  - Easy-to-use sidebar with links to pages
+  - Toggle sidebar & dropdown menus
+
+- 🌐 **Responsive UI**
+  - Clean interface styled with CSS & Bootstrap
+  - Works across devices
+
+- 📊 **Reusable Components**
+  - Data Tables used across Employees, Attendance, and Payroll pages
+
+---
 
 ## 🛠 Tech Stack
 
@@ -25,34 +64,50 @@ A modern Human Resources Information System (HRIS) built with **React.js**, desi
 - **State Management**: useState, useEffect
 - **Persistence**: localStorage
 
+---
+
 ## 📁 Folder Structure
 src/
 ├── components/
 │ ├── Header.js
 │ ├── Sidebar.js
+│ ├── Footer.js
 │ ├── AttendanceChart.js
+│ ├── DataTable.js
 │ └── PrivateRoute.js
 ├── pages/
 │ ├── Login.js
 │ ├── Register.js
 │ ├── Dashboard.js
 │ ├── Profile.js
-│ └── Attendance.js
+│ ├── LeaveRequest.js
+│ ├── Employees.js
+│ ├── Attendance.js
+│ └── Payroll.js
 ├── css/
 │ └── layout.css
+├── data/
+│ └── dummyData.json
 ├── App.js
 └── index.js
 
-bash
+yaml
 Copy
 Edit
 
+---
+
 ## 📸 Screenshots
 
-> Tambahkan nanti:
-- Dashboard view
-- Attendance form + chart
-- Profile modal update
+> Add screenshots later:  
+- Dashboard view  
+- Attendance form + chart  
+- Profile modal update  
+- Leave request form & history  
+- Employee management table  
+- Payroll view & payslip export  
+
+---
 
 ## ✅ How to Run Locally
 
@@ -66,5 +121,4 @@ npm start
 
 👨‍💻 Author
 Efwan Rizaldi
-📫 LinkedIn : https://www.linkedin.com/in/efwan-rizaldi-7a9801265/
-
+📫 LinkedIn: https://www.linkedin.com/in/efwan-rizaldi-7a9801265/
